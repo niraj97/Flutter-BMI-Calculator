@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:bmigoodui/constants.dart';
 import 'package:bmigoodui/height/height_card.dart';
+import 'package:bmigoodui/Gender/gender_card.dart';
 
 const int inActiveFlex = 2;
 const int activeFlex = 3;
@@ -18,6 +19,7 @@ class _HomePageState extends State<HomePage> {
   int otherFlex = inActiveFlex;
   String genderClicked = 'female';
   String genderImgSrc = 'assets/images/female_shad.png';
+  String units = 'meters';
 
   updateFlex() {
     if (genderClicked == 'male') {
@@ -146,8 +148,10 @@ class _HomePageState extends State<HomePage> {
                         buttonIndex++) {
                       if (buttonIndex == index) {
                         selections[buttonIndex] = true;
+                        units = 'feet';
                       } else {
                         selections[buttonIndex] = false;
+                        units = 'meters';
                       }
                     }
                   });
@@ -159,92 +163,35 @@ class _HomePageState extends State<HomePage> {
               ),
               HeightCard(
                 genderImageSrc: genderImgSrc,
+                unit: units,
               ),
               SizedBox(
                 height: 20.0,
               ),
               Container(
                 width: 150.0,
+                height: 40.0,
                 decoration: BoxDecoration(
                   color: kButtonColor,
                   borderRadius: BorderRadius.all(Radius.circular(20.0)),
                 ),
-                child: RawMaterialButton(
-                  onPressed: () {
+                child: InkWell(
+                  onTap: () {
                     //continue action
-                    print('button Clicked');
+                    Navigator.push(context, )
                   },
-                  child: Text(
-                    'CONTINUE',
-                    style: TextStyle(
-                      fontSize: 20.0,
-                      color: Colors.white,
-                      fontWeight: FontWeight.w400,
+                  child: Center(
+                    child: Text(
+                      'CONTINUE',
+                      style: TextStyle(
+                        fontSize: 16.0,
+                        color: Colors.white,
+                        fontWeight: FontWeight.w500,
+                      ),
                     ),
                   ),
                 ),
               ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class GenderCard extends StatefulWidget {
-  final String gender;
-  final String imgSrc;
-  const GenderCard({
-    Key key,
-    @required this.gender,
-    @required this.imgSrc,
-  }) : super(key: key);
-
-  @override
-  _GenderCardState createState() => _GenderCardState();
-}
-
-class _GenderCardState extends State<GenderCard> {
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.all(8.0),
-      child: Container(
-        padding: EdgeInsets.all(20),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(10),
-          boxShadow: [
-            BoxShadow(
-              offset: Offset(0, 10),
-              blurRadius: 15,
-              spreadRadius: 2,
-              color: kShadowColor,
-            ),
-          ],
-        ),
-        child: Material(
-          color: Colors.transparent,
-          child: Column(
-            children: <Widget>[
-              Image(
-                image: AssetImage(widget.imgSrc),
-                width: MediaQuery.of(context).size.width,
-              ),
-              Text(
-                widget.gender,
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 14.0,
-                  color: (widget.gender == 'Male')
-                      ? kMaleColor
-                      : (widget.gender == 'Female')
-                          ? kFemaleColor
-                          : kOtherColor,
-                  fontWeight: FontWeight.w600,
-                ),
-              )
             ],
           ),
         ),

@@ -3,27 +3,24 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class HeightCard extends StatefulWidget {
-  String genderImageSrc;
-  HeightCard({
-    Key key,
-    this.genderImageSrc,
-  }) : super(key: key);
+  final String genderImageSrc;
+  final String unit;
+  HeightCard({Key key, this.genderImageSrc, this.unit}) : super(key: key);
   @override
-  _HeightCardState createState() => _HeightCardState(genderImageSrc);
+  _HeightCardState createState() => _HeightCardState();
 }
 
 class _HeightCardState extends State<HeightCard> {
   double imageHeight = 140.0;
   double heightMark = 135.0;
-  List<Text> heightTexts = [];
-  String genderImageSrc;
+  List<Text> heightTextMeter = [];
+  List<Text> heightTextFeet = [];
 
-  _HeightCardState(this.genderImageSrc);
-
-  pickerChildren() {
+  pickerChildrenMeters() {
     for (int i = 120; i <= 230; i++) {
-      heightTexts.add(Text(
-        '$i cm',
+      String x = (i / 100).toStringAsFixed(2);
+      heightTextMeter.add(Text(
+        '$x m',
         style: TextStyle(
           fontSize: 15.0,
           color: kPickerColor,
@@ -32,11 +29,30 @@ class _HeightCardState extends State<HeightCard> {
     }
   }
 
+  pickerChildrenFeet() {
+    for (int i = 3; i < 8; i++) {
+      for (int j = 0; j < 12; j++) {
+        if (i == 7 && j == 8) break;
+        if (i == 3 && j < 10) continue;
+        heightTextFeet.add(Text(
+          '$i.$j ft',
+          style: TextStyle(
+            fontSize: 15.0,
+            color: kPickerColor,
+          ),
+        ));
+      }
+    }
+
+    for (int i = 120; i <= 230; i++) {}
+  }
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    pickerChildren();
+    pickerChildrenMeters();
+    pickerChildrenFeet();
   }
 
   @override
@@ -52,7 +68,7 @@ class _HeightCardState extends State<HeightCard> {
               children: <Widget>[
                 Container(
                   child: Image(
-                    image: AssetImage(genderImageSrc),
+                    image: AssetImage(widget.genderImageSrc),
                     height: imageHeight,
                   ),
                 ),
@@ -82,11 +98,17 @@ class _HeightCardState extends State<HeightCard> {
               itemExtent: 50,
               onSelectedItemChanged: (value) {
                 setState(() {
-                  imageHeight = 140.0 + value.toDouble();
-                  heightMark = 135.0 + value.toDouble();
+                  if (widget.unit == 'meters') {
+                    imageHeight = 140.0 + value.toDouble();
+                    heightMark = 135.0 + value.toDouble();
+                  } else {
+                    imageHeight = 140.0 + 2.5 * value.toDouble();
+                    heightMark = 135.0 + 2.5 * value.toDouble();
+                  }
                 });
               },
-              children: heightTexts,
+              children:
+                  (widget.unit == 'meters') ? heightTextMeter : heightTextFeet,
             ),
           ),
         ],
