@@ -96,14 +96,15 @@ class _HeightCardState extends State<HeightCard> {
             child: CupertinoPicker(
               useMagnifier: true,
               itemExtent: 50,
-              onSelectedItemChanged: (value) {
+              onSelectedItemChanged: (index) {
                 setState(() {
                   if (widget.unit == 'meters') {
-                    imageHeight = 140.0 + value.toDouble();
-                    heightMark = 135.0 + value.toDouble();
+                    imageHeight = 140.0 + index.toDouble();
+                    heightMark = 135.0 + index.toDouble();
                   } else {
-                    imageHeight = 140.0 + 2.5 * value.toDouble();
-                    heightMark = 135.0 + 2.5 * value.toDouble();
+                    index = 0;
+                    imageHeight = 140.0 + 2.5 * index.toDouble();
+                    heightMark = 135.0 + 2.5 * index.toDouble();
                   }
                 });
               },

@@ -1,7 +1,9 @@
+import 'package:bmigoodui/screens/weight_page.dart';
 import 'package:flutter/material.dart';
 import 'package:bmigoodui/constants.dart';
 import 'package:bmigoodui/height/height_card.dart';
 import 'package:bmigoodui/Gender/gender_card.dart';
+import 'weight_page.dart';
 
 const int inActiveFlex = 2;
 const int activeFlex = 3;
@@ -12,7 +14,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  List<bool> selections = List.generate(2, (_) => false);
+  List<bool> selections = [true, false];
   double photoHeight = 220.0;
   int maleFlex = inActiveFlex;
   int femaleFlex = activeFlex;
@@ -178,7 +180,10 @@ class _HomePageState extends State<HomePage> {
                 child: InkWell(
                   onTap: () {
                     //continue action
-                    Navigator.push(context, )
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => WeightPage()),
+                    );
                   },
                   child: Center(
                     child: Text(
