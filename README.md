@@ -1,8 +1,14 @@
-# bmigoodui
+# BMI Calculator
 
 A new Flutter application.
 
-## Getting Started
+
+Implementation of [Johny Vino](https://dribbble.com/mianzegregory)'s [design](https://dribbble.com/shots/10873271-Daily-UI-004-BMI-Calculator).
+
+## Design(s):
+![Design](https://cdn.dribbble.com/users/3867232/screenshots/10873271/media/35497a73ecc28d4d5f58937814c6d076.png)
+
+## Getting Started with Flutter
 
 This project is a starting point for a Flutter application.
 
