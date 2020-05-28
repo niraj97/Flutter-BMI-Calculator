@@ -21,7 +21,7 @@ class _HomePageState extends State<HomePage> {
   int otherFlex = inActiveFlex;
   String genderClicked = 'female';
   String genderImgSrc = 'assets/images/female_shad.png';
-  String units = 'meters';
+  String heightUnits = 'meters';
 
   updateFlex() {
     if (genderClicked == 'male') {
@@ -55,7 +55,6 @@ class _HomePageState extends State<HomePage> {
             children: <Widget>[
               Text(
                 'Gender',
-                textAlign: TextAlign.left,
                 style: TextStyle(
                   color: kGreyTextColor,
                   fontSize: 20.0,
@@ -120,7 +119,7 @@ class _HomePageState extends State<HomePage> {
                 ],
               ),
               Padding(
-                padding: EdgeInsets.symmetric(horizontal: 40.0, vertical: 20.0),
+                padding: EdgeInsets.symmetric(vertical: 20.0),
                 child: Text(
                   'Height',
                   style: TextStyle(
@@ -131,47 +130,60 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ),
               ),
-              ToggleButtons(
-                constraints: BoxConstraints(minWidth: 100.0, minHeight: 30.0),
-                borderRadius: BorderRadius.all(Radius.circular(15.0)),
-                fillColor: kToggleColor,
-                selectedBorderColor: kToggleColor,
-                disabledBorderColor: kToggleColor,
-//                borderColor: kToggleColor,
-                selectedColor: Colors.white,
+              Stack(
+                alignment: Alignment.center,
                 children: <Widget>[
-                  Text('Meters'),
-                  Text('Feet'),
+                  ToggleButtons(
+                    constraints:
+                        BoxConstraints(minWidth: 100.0, minHeight: 30.0),
+                    borderRadius: BorderRadius.all(Radius.circular(15.0)),
+                    fillColor: kToggleColor,
+                    selectedBorderColor: kToggleColor,
+//                borderColor: kToggleColor,
+                    selectedColor: Colors.white,
+                    children: <Widget>[
+                      Text('Meters'),
+                      Text('Feet'),
+                    ],
+                    onPressed: (int index) {
+                      setState(() {
+                        for (int buttonIndex = 0;
+                            buttonIndex < selections.length;
+                            buttonIndex++) {
+                          if (buttonIndex == index) {
+                            selections[buttonIndex] = true;
+                            heightUnits = 'feet';
+                          } else {
+                            selections[buttonIndex] = false;
+                            heightUnits = 'meters';
+                          }
+                        }
+                      });
+                    },
+                    isSelected: selections,
+                  ),
+                  Container(
+                    height: 30.0,
+                    width: 30.0,
+                    decoration: BoxDecoration(
+                      color: kToggleColor,
+                      borderRadius: BorderRadius.all(Radius.circular(15.0)),
+                    ),
+                  )
                 ],
-                onPressed: (int index) {
-                  setState(() {
-                    for (int buttonIndex = 0;
-                        buttonIndex < selections.length;
-                        buttonIndex++) {
-                      if (buttonIndex == index) {
-                        selections[buttonIndex] = true;
-                        units = 'feet';
-                      } else {
-                        selections[buttonIndex] = false;
-                        units = 'meters';
-                      }
-                    }
-                  });
-                },
-                isSelected: selections,
               ),
               SizedBox(
                 height: 27.0,
               ),
               HeightCard(
                 genderImageSrc: genderImgSrc,
-                unit: units,
+                unit: heightUnits,
               ),
               SizedBox(
                 height: 20.0,
               ),
               Container(
-                width: 150.0,
+                width: 180.0,
                 height: 40.0,
                 decoration: BoxDecoration(
                   color: kButtonColor,
