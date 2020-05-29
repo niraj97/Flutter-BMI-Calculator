@@ -95,13 +95,15 @@ class _HeightCardState extends State<HeightCard> {
             flex: 1,
             child: CupertinoPicker(
               useMagnifier: true,
+              magnification: 1.5,
+              scrollController: FixedExtentScrollController(initialItem: 10),
               itemExtent: 50,
               onSelectedItemChanged: (index) {
                 setState(() {
                   if (widget.unit == 'meters') {
                     imageHeight = 140.0 + index.toDouble();
                     heightMark = 135.0 + index.toDouble();
-                  } else {
+                  } else if (widget.unit == 'feet') {
                     index = 0;
                     imageHeight = 140.0 + 2.5 * index.toDouble();
                     heightMark = 135.0 + 2.5 * index.toDouble();
