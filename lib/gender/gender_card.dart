@@ -27,15 +27,16 @@ class _GenderCardState extends State<GenderCard> {
           boxShadow: [
             BoxShadow(
               offset: Offset(0, 10),
-              blurRadius: 15,
-              spreadRadius: 2,
+              blurRadius: 8,
+              spreadRadius: -2,
               color: kShadowColor,
             ),
           ],
         ),
-        child: Material(
+        child: Container(
           color: Colors.transparent,
           child: Column(
+            mainAxisSize: MainAxisSize.min,
             children: <Widget>[
               Image(
                 image: AssetImage(widget.imgSrc),

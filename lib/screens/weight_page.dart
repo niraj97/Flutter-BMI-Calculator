@@ -1,28 +1,38 @@
 import 'dart:math';
 
+import 'package:bmigoodui/screens/result_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:bmigoodui/constants.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'dart:math';
 
-const int minWeight = 0;
-const int maxWeight = 150;
+const int minWeightKgs = 0;
+const int maxWeightKgs = 150;
+const int minWeightLbs = 0;
+const int maxWeightLbs = 330;
 
 class WeightPage extends StatefulWidget {
+  final double height;
+  WeightPage({this.height});
   @override
   _WeightPageState createState() => _WeightPageState();
 }
 
 class _WeightPageState extends State<WeightPage> {
   List<bool> selections = [true, false];
-  String weightUnits = 'KGs';
+  String weightUnits = 'Kgs';
   int weightKgs = 50;
-  double weightAngle = ((50 - minWeight) * pi / maxWeight);
+  int weightLbs = 110;
+  double weightAngle = ((50 - minWeightKgs) * pi / maxWeightKgs);
 //  double weightAngle = pi / 2;
   List<Text> heightTextKgs = [];
+  List<Text> heightTextLbs = [];
+  double heightSquare = 0;
+  double bmi;
 
   pickerChildrenKgs() {
-    for (int i = minWeight; i <= maxWeight; i++) {
+    for (int i = minWeightKgs; i <= maxWeightKgs; i++) {
       heightTextKgs.add(Text(
         '$i Kg',
         style: TextStyle(
@@ -33,11 +43,46 @@ class _WeightPageState extends State<WeightPage> {
     }
   }
 
+  pickerChildrenLbs() {
+    for (int i = minWeightLbs; i <= maxWeightLbs; i++) {
+      heightTextLbs.add(Text(
+        '$i Lb',
+        style: TextStyle(
+          fontSize: 15.0,
+          color: kPickerColor,
+        ),
+      ));
+    }
+  }
+
+  Color getArrowColor() {
+    //function
+    bmi = (weightKgs / heightSquare);
+    if (bmi < 11) {
+      return Color.lerp(Color(0xFF050A30), Color(0xFF000C66), bmi / 11);
+    } else if (bmi >= 11 && bmi < 18) {
+      return Color.lerp(
+          Color(0xFF000C66), Colors.blue[400], (bmi - 11) / (18 - 11));
+    } else if (bmi >= 18 && bmi < 22) {
+      return Color.lerp(
+          Colors.blue[400], Color(0xFF00FF00), (bmi - 18) / (22 - 18));
+    } else if (bmi >= 22 && bmi < 25) {
+      return Color.lerp(
+          Color(0xFF00FF00), Color(0xFFFFFF00), (bmi - 22) / (25 - 22));
+    } else if (bmi >= 25 && bmi < 30) {
+      return Color.lerp(
+          Color(0xFFFFFF00), Color(0xFFFF0000), (bmi - 25) / (30 - 25));
+    } else
+      return Color.lerp(Color(0xFFFF0000), Color(0xFF420D09), (bmi - 30) / 30);
+  }
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     pickerChildrenKgs();
+    pickerChildrenLbs();
+    heightSquare = widget.height * widget.height / 10000;
   }
 
   @override
@@ -47,6 +92,15 @@ class _WeightPageState extends State<WeightPage> {
         backgroundColor: Colors.white,
         elevation: 0.0,
         iconTheme: IconThemeData(color: Colors.black),
+        actions: <Widget>[
+          Padding(
+            padding: const EdgeInsets.only(right: 16.0),
+            child: Icon(
+              Icons.info_outline,
+              color: Colors.black,
+            ),
+          )
+        ],
       ),
       body: SafeArea(
         child: Padding(
@@ -89,10 +143,10 @@ class _WeightPageState extends State<WeightPage> {
                             buttonIndex++) {
                           if (buttonIndex == index) {
                             selections[buttonIndex] = true;
-                            weightUnits = 'KGs';
+                            weightUnits = 'Lbs';
                           } else {
                             selections[buttonIndex] = false;
-                            weightUnits = 'LBs';
+                            weightUnits = 'Kgs';
                           }
                         }
                       });
@@ -126,7 +180,7 @@ class _WeightPageState extends State<WeightPage> {
                         WeightLine(
                           rotateAngle: 1 / 2,
                           transformHeight: 125.0,
-                          transformWidth: 20.0,
+                          transformWidth: 25.0,
                         ),
                         WeightLine(
                           rotateAngle: 3 / 4,
@@ -146,7 +200,7 @@ class _WeightPageState extends State<WeightPage> {
                         WeightLine(
                           rotateAngle: 1 / 2,
                           transformHeight: 125.0,
-                          transformWidth: 280.0,
+                          transformWidth: 275.0,
                         ),
                         Transform.rotate(
                           origin: Offset(0, 25),
@@ -157,7 +211,7 @@ class _WeightPageState extends State<WeightPage> {
                               angle: 3 * pi / 2,
                               child: SvgPicture.asset(
                                 'assets/images/weight_arrow.svg',
-                                color: kToggleColor,
+                                color: getArrowColor(),
                                 height: 100.0,
                               ),
                             ),
@@ -169,17 +223,51 @@ class _WeightPageState extends State<WeightPage> {
                       height: 30.0,
                     ),
                     Expanded(
-                      child: CupertinoPicker(
-                        useMagnifier: true,
-                        magnification: 1.5,
-                        itemExtent: 50,
-                        onSelectedItemChanged: (index) {
-                          setState(() {
-                            weightKgs = minWeight + index;
-                            weightAngle = (index * pi / maxWeight);
-                          });
-                        },
-                        children: heightTextKgs,
+                      child: Stack(
+                        children: <Widget>[
+                          Visibility(
+                            visible: (weightUnits == 'Kgs'),
+                            child: CupertinoPicker(
+                              useMagnifier: true,
+                              magnification: 1.5,
+                              scrollController:
+                                  FixedExtentScrollController(initialItem: 50),
+                              itemExtent: 50,
+                              onSelectedItemChanged: (index) {
+                                if (weightUnits == 'Kgs') {
+                                  setState(() {
+                                    weightKgs = minWeightKgs + index;
+                                    weightAngle = (index * pi / maxWeightKgs);
+                                  });
+                                } else
+                                  index = 0;
+                              },
+                              children: heightTextKgs,
+                            ),
+                          ),
+                          Visibility(
+                            visible: (weightUnits == 'Lbs'),
+                            child: CupertinoPicker(
+                              useMagnifier: true,
+                              magnification: 1.5,
+                              scrollController:
+                                  FixedExtentScrollController(initialItem: 110),
+                              itemExtent: 50,
+                              onSelectedItemChanged: (index) {
+                                if (weightUnits == 'Lbs') {
+                                  weightKgs = index ~/ 2.205;
+                                  print(weightKgs);
+                                  setState(() {
+                                    weightLbs = minWeightLbs + index;
+                                    weightAngle = (index * pi / maxWeightLbs);
+                                  });
+                                } else
+                                  index = 0;
+                              },
+                              children: heightTextLbs,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ],
@@ -195,7 +283,15 @@ class _WeightPageState extends State<WeightPage> {
                 child: InkWell(
                   onTap: () {
                     //continue action
-                    Navigator.pop(context);
+//                    Navigator.push(context,
+//                        MaterialPageRoute(builder: (context) => ResultPage()));
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => ResultPage(
+                                bmi: bmi,
+                              )),
+                    );
                   },
                   child: Center(
                     child: Text(
@@ -208,7 +304,7 @@ class _WeightPageState extends State<WeightPage> {
                     ),
                   ),
                 ),
-              )
+              ),
             ],
           ),
         ),

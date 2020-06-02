@@ -15,13 +15,13 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   List<bool> selections = [true, false];
-  double photoHeight = 220.0;
   int maleFlex = inActiveFlex;
   int femaleFlex = activeFlex;
   int otherFlex = inActiveFlex;
   String genderClicked = 'female';
   String genderImgSrc = 'assets/images/female_shad.png';
   String heightUnits = 'meters';
+  int height = 120;
 
   updateFlex() {
     if (genderClicked == 'male') {
@@ -178,6 +178,9 @@ class _HomePageState extends State<HomePage> {
               HeightCard(
                 genderImageSrc: genderImgSrc,
                 unit: heightUnits,
+                getHeight: (value) {
+                  height = value;
+                },
               ),
               SizedBox(
                 height: 20.0,
@@ -194,7 +197,10 @@ class _HomePageState extends State<HomePage> {
                     //continue action
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => WeightPage()),
+                      MaterialPageRoute(
+                          builder: (context) => WeightPage(
+                                height: height.toDouble(),
+                              )),
                     );
                   },
                   child: Center(

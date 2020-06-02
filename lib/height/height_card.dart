@@ -5,16 +5,19 @@ import 'package:flutter/material.dart';
 class HeightCard extends StatefulWidget {
   final String genderImageSrc;
   final String unit;
-  HeightCard({Key key, this.genderImageSrc, this.unit}) : super(key: key);
+  final Function getHeight;
+  HeightCard({Key key, this.genderImageSrc, this.unit, this.getHeight})
+      : super(key: key);
   @override
   _HeightCardState createState() => _HeightCardState();
 }
 
 class _HeightCardState extends State<HeightCard> {
-  double imageHeight = 140.0;
-  double heightMark = 135.0;
+  double imageHeight = 180.0;
+  double heightMark = 175.0;
   List<Text> heightTextMeter = [];
   List<Text> heightTextFeet = [];
+  int height = 120;
 
   pickerChildrenMeters() {
     for (int i = 120; i <= 230; i++) {
@@ -93,25 +96,52 @@ class _HeightCardState extends State<HeightCard> {
           ),
           Expanded(
             flex: 1,
-            child: CupertinoPicker(
-              useMagnifier: true,
-              magnification: 1.5,
-              scrollController: FixedExtentScrollController(initialItem: 10),
-              itemExtent: 50,
-              onSelectedItemChanged: (index) {
-                setState(() {
-                  if (widget.unit == 'meters') {
-                    imageHeight = 140.0 + index.toDouble();
-                    heightMark = 135.0 + index.toDouble();
-                  } else if (widget.unit == 'feet') {
-                    index = 0;
-                    imageHeight = 140.0 + 2.5 * index.toDouble();
-                    heightMark = 135.0 + 2.5 * index.toDouble();
-                  }
-                });
-              },
-              children:
-                  (widget.unit == 'meters') ? heightTextMeter : heightTextFeet,
+            child: Stack(
+              children: <Widget>[
+                Visibility(
+                  visible: (widget.unit == 'meters'),
+                  child: CupertinoPicker(
+                      useMagnifier: true,
+                      magnification: 1.5,
+                      scrollController:
+                          FixedExtentScrollController(initialItem: 40),
+                      itemExtent: 50,
+                      onSelectedItemChanged: (index) {
+                        if (widget.unit == 'meters') {
+                          height = 120 + index;
+                          widget.getHeight(height);
+                          setState(() {
+                            imageHeight = 140.0 + index.toDouble();
+                            heightMark = 135.0 + index.toDouble();
+                          });
+                        } else
+                          index = 0;
+                      },
+                      children: heightTextMeter),
+                ),
+                Visibility(
+                  visible: (widget.unit == 'feet'),
+                  child: CupertinoPicker(
+                    useMagnifier: true,
+                    magnification: 1.5,
+                    scrollController:
+                        FixedExtentScrollController(initialItem: 17),
+                    itemExtent: 50,
+                    onSelectedItemChanged: (index) {
+                      if (widget.unit == 'feet') {
+                        height = (120.0 + 2.54 * index).toInt();
+                        widget.getHeight(height);
+                        setState(() {
+                          imageHeight = 140.0 + 2.5 * index.toDouble();
+                          heightMark = 135.0 + 2.5 * index.toDouble();
+                        });
+                      } else
+                        index = 0;
+                    },
+                    children: heightTextFeet,
+                  ),
+                ),
+              ],
             ),
           ),
         ],
