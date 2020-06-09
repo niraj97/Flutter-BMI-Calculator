@@ -3,7 +3,7 @@
 A new Flutter application.
 
 
-Implementation of [Johny Vino](https://dribbble.com/mianzegregory)'s [design](https://dribbble.com/shots/10873271-Daily-UI-004-BMI-Calculator).
+Implementation of [Mianze Gregory](https://dribbble.com/mianzegregory)'s [design](https://dribbble.com/shots/10873271-Daily-UI-004-BMI-Calculator).
 
 ## Design(s):
 ![Design](https://cdn.dribbble.com/users/3867232/screenshots/10873271/media/35497a73ecc28d4d5f58937814c6d076.png)
